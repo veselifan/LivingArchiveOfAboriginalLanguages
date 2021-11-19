@@ -1,0 +1,2 @@
+# WagtailLivingArchive
+Living Archive Template
