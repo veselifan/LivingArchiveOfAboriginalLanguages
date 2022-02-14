@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-
+{% load wagtailcore_tags %}
 {% block body_class %}template-homepage{% endblock %}
 
 {% block extra_css %}
@@ -8,14 +8,26 @@
 {% comment %}
 Delete the line below if you're just getting started and want to remove the welcome screen!
 {% endcomment %}
-<link rel="stylesheet" href="{% static 'css/welcome_page.css' %}">
+
 {% endblock extra_css %}
 
 {% block content %}
-
+    {{ page.body|richtext }}
+    <p>
+        <b>Welcome to living archives !</b>
+    </p>
+    <iframe
+      width="1200"
+      height="800"
+      style="border:0"
+      loading="lazy"
+      allowfullscreen
+      src="https://www.google.com/maps/embed/v1/place?key=AIzaSyB35JWbAVaroVf_foJTg2xjjbPw3EFrvlw
+        &q=Australia&maptype=satellite">
+    </iframe>
 {% comment %}
 Delete the line below if you're just getting started and want to remove the welcome screen!
 {% endcomment %}
-{% include 'home/welcome_page.html' %}
+
 
 {% endblock content %}
