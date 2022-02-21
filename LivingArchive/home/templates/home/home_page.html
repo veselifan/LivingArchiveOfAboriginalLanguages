@@ -8,7 +8,8 @@
         <meta name="description" content="" />
         <meta name="author" content="" />
         <title>
-            {% block title %}
+           
+            {% block title  %} 
                 {% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}
             {% endblock %}
             {% block title_suffix %}
@@ -52,7 +53,7 @@
         <header class="masthead">
           <!-- {% block content %}{% endblock %} !-->
             <div class="container">                
-                <div class="masthead-subheading">Welcome To Living Archive!</div>
+                <div class="masthead-subheading">Welcome To Living Archive! </div>
                 <div class="masthead-heading text-uppercase">Here are our stories</div>
                 <a class="btn btn-primary btn-xl text-uppercase" href="#services">Explore More</a>
             </div>
@@ -61,13 +62,13 @@
         <section class="page-section" id="services">
             <div class="container">
                 <div class="text-center">
-                    <h2 class="section-heading text-uppercase">Our Project</h2>
+                    <h2 class="section-heading text-uppercase">Our Project </h2>
                     <h3 class="section-subheading text-muted">Click on the map locations to see details .</h3>
                 </div>
                 <head> 
                     <meta http-equiv="content-type" content="text/html; charset=UTF-8" /> 
-                    <title>Google Maps Multiple Markers</title> 
-                    <script src="http://maps.google.com/maps/api/js?key=AIzaSyB35JWbAVaroVf_foJTg2xjjbPw3EFrvlw" 
+                    <title>Google Maps Multiple Markers </title> 
+                    <script src="http://maps.google.com/maps/api/js?key={{ api_key }}"
                             type="text/javascript"></script>
                 </head> 
                 <body>

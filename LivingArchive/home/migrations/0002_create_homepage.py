@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import migrations
+from LivingArchive.settings.dev import API_KEY
+
 
 
 def create_homepage(apps, schema_editor):
@@ -11,11 +13,11 @@ def create_homepage(apps, schema_editor):
 
     # Delete the default homepage
     # If migration is run multiple times, it may have already been deleted
-    Page.objects.filter(id=2).delete()
+    #Page.objects.filter(id=2).delete()
 
     # Create content type for homepage model
     homepage_content_type, __ = ContentType.objects.get_or_create(
-        model='homepage', app_label='home')
+        model='homepage', app_label='home', api_key=API_KEY)
 
     # Create a new homepage
     homepage = HomePage.objects.create(
@@ -27,6 +29,8 @@ def create_homepage(apps, schema_editor):
         depth=2,
         numchild=0,
         url_path='/home/',
+       
+       
     )
 
     # Create a site with the new homepage set as the root
