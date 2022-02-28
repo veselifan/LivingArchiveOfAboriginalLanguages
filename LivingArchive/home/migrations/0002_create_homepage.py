@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.db import migrations
-from LivingArchive.settings.dev import API_KEY
+
 
 
 
@@ -17,7 +17,7 @@ def create_homepage(apps, schema_editor):
 
     # Create content type for homepage model
     homepage_content_type, __ = ContentType.objects.get_or_create(
-        model='homepage', app_label='home', api_key=API_KEY)
+        model='homepage', app_label='home')
 
     # Create a new homepage
     homepage = HomePage.objects.create(

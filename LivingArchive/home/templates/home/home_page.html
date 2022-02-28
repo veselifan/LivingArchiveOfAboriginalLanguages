@@ -68,10 +68,11 @@
                 <head> 
                     <meta http-equiv="content-type" content="text/html; charset=UTF-8" /> 
                     <title>Google Maps Multiple Markers </title> 
-                    <script src="http://maps.google.com/maps/api/js?key={{ api_key }}"
+                    <script src="http://maps.google.com/maps/api/js?key={{ page.api_key }}"
                             type="text/javascript"></script>
                 </head> 
                 <body>
+                    <p> Here is the key {{ page.api_key }}</p>
                     <div id="map" style="width: 100%; height: 600px;"></div>
                   
                     <script type="text/javascript">
