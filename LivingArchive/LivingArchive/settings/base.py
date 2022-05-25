@@ -12,9 +12,16 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from djangokeys import DjangoKeys
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
+
+keys=DjangoKeys ("./LivingArchive/settings/.env")
+api_key = keys.str("API_KEY")
+
+WAGTAIL_ADDRESS_MAP_CENTER = 'Darwin, Australia'  # It must be a properly formatted address
+WAGTAIL_ADDRESS_MAP_KEY = str(api_key)
 
 
 # Quick-start development settings - unsuitable for production
@@ -26,6 +33,7 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 INSTALLED_APPS = [
     'home',
     'search',
+    'wagtailgmaps',
 
     'wagtail.contrib.forms',
     'wagtail.contrib.redirects',
