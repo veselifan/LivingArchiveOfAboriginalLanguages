@@ -1,0 +1,11 @@
+{
+  "requires": true,
+  "lockfileVersion": 1,
+  "dependencies": {
+    "smartmenus": {
+      "version": "1.2.1",
+      "resolved": "https://registry.npmjs.org/smartmenus/-/smartmenus-1.2.1.tgz",
+      "integrity": "sha512-W5UoxfywB2o9fsk6RglDoSIJoCtBPnajJCiip9JBfRX46ZV+LkTtysiChiVJNEm8QZOPb9MPC1wXrrCTzGIaAw=="
+    }
+  }
+}

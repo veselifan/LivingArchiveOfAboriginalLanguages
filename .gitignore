@@ -1,3 +1,4 @@
-#ignore parameters
-dev.py
-prod.py
+venv
+env
+.env
+__pycache__
