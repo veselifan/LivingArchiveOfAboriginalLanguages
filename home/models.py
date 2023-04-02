@@ -9,6 +9,7 @@ from wagtail.contrib.forms.models import (
     AbstractEmailForm,
     AbstractFormField
 )
+
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 
 from wagtail.admin.edit_handlers import (
