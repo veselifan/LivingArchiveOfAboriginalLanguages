@@ -44,7 +44,7 @@
                 <div class="masthead-subheading text-uppercase" style="color: black;">{% trans "Verify Your E-mail Address" %}</div>                            
                 
                 {% if messages %}
-                <div style="color: black;">
+                <div style="color: white;">
                     {% for message in messages %}
                         {% if forloop.last %}
                             <p>{{message}}</p>
@@ -53,7 +53,7 @@
                 </div>
                 {% endif %}
 
-                <p style="color: black; font-size: large;">{% blocktrans %}We have sent an e-mail to you for verification. Follow the link provided to finalize the signup process. If you do not see the verification e-mail in your main inbox, check your spam folder. Please contact us if you do not receive the verification e-mail within a few minutes.{% endblocktrans %}</p>   
+                <p>{% blocktrans %}We have sent an e-mail to you for verification. Follow the link provided to finalize the signup process. If you do not see the verification e-mail in your main inbox, check your spam folder. Please contact us if you do not receive the verification e-mail within a few minutes.{% endblocktrans %}</p>   
                         
             </div>            
         </header>
