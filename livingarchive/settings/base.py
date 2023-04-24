@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'blog',
     'module',
     'wagtailvideos',
-    'mirage',
     'wagtail.contrib.modeladmin',
     'wagtail.contrib.forms',
     'wagtail.contrib.redirects',
@@ -56,22 +55,21 @@ INSTALLED_APPS = [
     'wagtail.admin',
     'wagtail.core',
     'captcha',
-    'wagtailcaptcha',
+   
     'wagtailstreamforms',
-
     'modelcluster',
     'taggit',
-
+    'allauth',
+    'allauth.account',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'allauth.socialaccount',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
+    
 ]
 
 SITE_ID = 1
@@ -184,7 +182,6 @@ FILE_UPLOAD_TEMP_DIR = str(os.path.join(PROJECT_DIR, 'tmp'))
 # JavaScript / CSS assets being served from cache (e.g. after a Wagtail upgrade).
 # See https://docs.djangoproject.com/en/3.2/ref/contrib/staticfiles/#manifeststaticfilesstorage
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/livingarchive/static/'
 

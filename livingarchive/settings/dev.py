@@ -11,7 +11,7 @@ MIRAGE_SECRET_KEY = 'gdhhgi%&HGKJ*F___fdffhdjfhsh===%@ghg'
 ALLOWED_HOSTS = ['*','localhost'] 
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
+WAGTAILADMIN_BASE_URL="http://localhost:8000"
 
 #EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 #EMAIL_HOST = 'smtp.gmail.com'
