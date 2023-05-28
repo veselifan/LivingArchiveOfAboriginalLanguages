@@ -1,0 +1,43 @@
+.nav-link-sp {
+    color: orange !important;
+}
+
+.smallheader .container .title{
+    color: black; 
+    font-style: normal;
+}
+
+.blog-img{
+    max-height:400px;
+    margin: auto;
+    display: block;
+}
+
+.blog-info-row {
+    font-size: larger; 
+    width:800px; 
+    margin: auto;  
+    text-align: left; 
+    text-transform: initial;
+    color: black;
+}
+
+.tips{
+    color: rgb(132, 255, 0) !important;
+}
+
+.blog-info-row span{
+    float:right;
+}
+
+.blog-info-row span a {
+    text-decoration: none;
+}
+
+.blog-content{
+    color: black; 
+    font-size: larger; 
+    width:800px;
+    margin: auto;  
+    text-align: justify;
+}
