@@ -57,8 +57,7 @@ INSTALLED_APPS = [
     'wagtail.admin',
     'wagtail.core',
     'captcha',
-    'wagtailmenus',
-    'user_group_management',
+   
     'wagtailstreamforms',
     'modelcluster',
     'taggit',
@@ -72,7 +71,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    'livingarchive',
     
 ]
 
@@ -120,7 +118,6 @@ AUTHENTICATION_BACKENDS = [
 
     # `allauth` specific authentication methods, such as login by e-mail
     'allauth.account.auth_backends.AuthenticationBackend',
-    
 ]
 
 WSGI_APPLICATION = 'livingarchive.wsgi.application'

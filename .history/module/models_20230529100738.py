@@ -66,5 +66,3 @@ class ModuleDetailPage(Page):
         VideoChooserPanel('video'),
         FieldPanel('body', classname="full"),
     ]
-
-

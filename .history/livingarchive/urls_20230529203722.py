@@ -11,6 +11,8 @@ from search import views as search_views
 from django.urls import path
 
 
+
+
 urlpatterns = [
     path('django-admin/', admin.site.urls),
     path('admin/', include(wagtailadmin_urls)),
@@ -38,4 +40,11 @@ urlpatterns = urlpatterns + [
     # Alternatively, if you want Wagtail pages to be served from a subpath
     # of your site, rather than the site root:
     #    path("pages/", include(wagtail_urls)),
+]
+
+from django.urls import path
+from setting.views import group_dashboard
+
+urlpatterns = [
+    path('group/dashboard/', group_dashboard, name='group_dashboard'),
 ]

@@ -10,6 +10,9 @@ from search import views as search_views
 
 from django.urls import path
 
+from livingarchive.wagtail_hooks import group_view
+
+
 
 urlpatterns = [
     path('django-admin/', admin.site.urls),
@@ -18,6 +21,7 @@ urlpatterns = [
     path('search/', search_views.search, name='search'),
     path(r'', include('allauth.urls')),
     path(r'', include(wagtail_urls)),
+    path('group-view/', group_view, name='group_view'),
 ]
 
 

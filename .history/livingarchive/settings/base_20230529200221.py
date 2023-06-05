@@ -57,8 +57,8 @@ INSTALLED_APPS = [
     'wagtail.admin',
     'wagtail.core',
     'captcha',
-    'wagtailmenus',
-    'user_group_management',
+    'wagtail_hooks'，
+   
     'wagtailstreamforms',
     'modelcluster',
     'taggit',
@@ -72,7 +72,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    'livingarchive',
     
 ]
 
@@ -120,7 +119,6 @@ AUTHENTICATION_BACKENDS = [
 
     # `allauth` specific authentication methods, such as login by e-mail
     'allauth.account.auth_backends.AuthenticationBackend',
-    
 ]
 
 WSGI_APPLICATION = 'livingarchive.wsgi.application'
@@ -278,3 +276,5 @@ RECAPTCHA_PRIVATE_KEY = "6Lcq534jAAAAAGcusv7gqVgT1vMY6CCaBJmkBE-A"
 
 NOCAPTCHA = True
 DEFAULT_AUTO_FIELD='django.db.models.AutoField'
+
+WAGTAIL_ADMIN_MODEL_EXTENSIONS = ['wagtail_hooks']

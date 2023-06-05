@@ -49,9 +49,7 @@
 	{% image self.image original as blog_img %}
                 <!--style="max-height:400px;-->
                 <img class="blog-img" src="{{ blog_img.url }}" alt= "{{ blog_img.alt }}">
-                <div class="blog-info-row">
-                    <div class="tips">⚠️ This page is private, you will be limited in access.</div>
-                </div>
+                <p class="blog-info-row tips">This page is private, you will be limited in access.</p>
                 {% if self.video %}
                     {% load wagtailvideos_tags %}
                     {% video self.video autoplay controls width=600 %}
@@ -73,6 +71,11 @@
                 </div>
             </div>
         
+
+
+
+
+
         <!-- Footer-->
         <footer class="footer py-4">
             <div class="container">
