@@ -358,7 +358,7 @@
                 <h2 class="section-heading text-uppercase">Contact Us</h2>
                 <h3 class="section-subheading text-muted">{{ self.intro|richtext }}</h3>
             </div>
-            <form id="contactForm" action="{% pageurl page %}" method="POST">
+            <form id="contactForm" action="{% pageurl page %}" method="POST" onsubmit="showThanksMessage(event)">
                 <div class="row align-items-stretch mb-5">
                     <div class="col-md-6">
                         {% csrf_token %}
@@ -396,16 +396,30 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="g-recaptcha" data-sitekey="6LfsIJYjAAAAAMOjW3Ysb4IdNQyxRatxcu1PmavL"></div>
+                    <div class="g-recaptcha" data-callback="correctCaptcha" data-sitekey="6LdIMWMmAAAAAF5D0LJkeFzjSqOU14B5H4FZHgVw"></div>
+                    <!--<div class="g-recaptcha" data-sitekey="6LfsIJYjAAAAAMOjW3Ysb4IdNQyxRatxcu1PmavL"></div> -->
 
                     <br />
                 </div>
 
-                <div class="text-center"><input type="submit" value="SEND MESSAGE"
-                        class="btn btn-primary btn-xl text-uppercase active"></div>
+                <div class="text-center"><input id="submit-button" type="submit" disabled value="SEND MESSAGE"
+                        class="btn btn-primary btn-xl text-uppercase active">
+                </div>           
 
             </form>
+            <script>
+                function correctCaptcha() {
+                  // This function will be called when the user successfully completes the captcha
+                  document.getElementById("submit-button").disabled = false;
+                }
+            </script>
+
+            <script>
+                function showThanksMessage(event) {
+                    alert('Thanks for your submission!');
+                }
+            </script>
+                  
         </div>
     </section>
     {% endblock content %}
