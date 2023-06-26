@@ -1,76 +1,81 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
-from django.core.exceptions import PermissionDenied
-from django.forms import CheckboxSelectMultiple
-from wagtail.admin.viewsets.model import ModelViewSet
-from django.urls import re_path
-from wagtail.users.forms import GroupForm
-from wagtail.users.views.groups import GroupViewSet as WagtailGroupViewSet, EditView, CreateView, IndexView, DeleteView
-from wagtail.users.views.users import Index
+from django.core.exceptions import ValidationError
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
+from django.views.generic import TemplateView
+from wagtail.admin import messages
+
+from .forms import UserGroupForm, GroupProfileFrom
+from .models import GroupProfile
+
+User = get_user_model()
 
 
-class MyGroupForm(GroupForm):
+def group_list(request):
+    if request.method == 'POST':
+        form = GroupProfileFrom(request.POST)
+        group_name = form.cleaned_data['group_name']
+        if Group.objects.exists(name=group_name):
+            raise ValidationError('Group exists')
+        group = Group.objects.create(name=group_name)
+        GroupProfile.objects.create(group=group)
+        return redirect('group_list')
+    else:
+        form = UserGroupForm()
+    return render(request, 'group_index.html',
+                  {'form': form, 'groups': [i.group.name for i in GroupProfile.objects.all()]})
 
-    class Meta:
-        model = Group
-        fields = (
-            "name",
-            "permissions",
-        )
-        widgets = {
-            "permissions": CheckboxSelectMultiple(),
-        }
 
+class GroupProfileListView(TemplateView):
+    template_name = 'group_list.html'
 
+    def get(self, request, *args, **kwargs):
+        not_created_groups = Group.objects.exclude(name__in=[i.group.name for i in GroupProfile.objects.all()])
+        for group in not_created_groups:
+            GroupProfile.objects.create(group=group)
+        context = self.get_context_data(**kwargs)
+        return self.render_to_response(context)
 
-
-class MyCreateView(CreateView):
-    template_name = "create_group.html"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        if user.is_superuser:
+            context['groups'] = GroupProfile.objects.all()
+        else:
+            context['groups'] = GroupProfile.objects.filter(create_by=user)
+        return context
 
     def post(self, request, *args, **kwargs):
-        """
-        Handle POST requests: instantiate a form instance with the passed
-        POST variables and then check if it's valid.
-        """
-        # Create an object now so that the permission panel forms have something to link them against
-        self.object = Group()
+        group_name = request.POST.get('group_name')
+        if group_name:
+            if Group.objects.filter(name=group_name).exists():
+                messages.error(request, 'Group already exists')
+            else:
+                group = Group.objects.create(name=group_name)
+                GroupProfile.objects.create(group=group, create_by=request.user)
 
-        form = self.get_form()
-        if form.is_valid():
-            response = self.form_valid(form)
-            return response
-        else:
-            return self.form_invalid(form)
+        return redirect(reverse('group_list'))
 
 
-class MyIndexView(IndexView):
-    """"""
+class GroupMembersView(TemplateView):
+    template_name = 'group_members.html'
 
-class MyDeleteView(DeleteView):
-    """"""
-    def delete_action(self):
-        raise PermissionDenied()
+    def get_queryset(self):
+        group = get_object_or_404(Group, id=self.kwargs['group_id'])
+        return group.user_set.all()
 
-class MyEditView(EditView):
-    template_name = "edit_group.html"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        group = get_object_or_404(Group, id=self.kwargs['group_id'])
+        context['group'] = group
+        context['members'] = group.user_set.all()
+        context['users'] = User.objects.exclude(groups__id=group.id)  # Only users not in the group
+        return context
 
-
-class GroupViewSet(ModelViewSet):
-    model = Group
-    icon = "group"
-    edit_view_class = MyEditView
-    add_view_class = MyCreateView
-    delete_view_class = MyDeleteView
-
-    form_fields = ['name']
-
-    @property
-    def users_view(self):
-        return Index.as_view()
-
-    def get_urlpatterns(self):
-        return super().get_urlpatterns() + [
-            re_path(r"(\d+)/users/$", self.users_view, name="users"),
-        ]
-
-
-group_viewset = GroupViewSet("my-groups")  # defines /admin/person/ as the base URL
+    def post(self, request, *args, **kwargs):
+        group = get_object_or_404(Group, id=self.kwargs['group_id'])
+        user_ids = request.POST.getlist('users')
+        users = User.objects.filter(id__in=user_ids)
+        group.user_set.add(*users)
+        return redirect(reverse('group_members', args=[group.id]))

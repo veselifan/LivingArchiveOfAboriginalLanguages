@@ -1,25 +1,24 @@
 from django.conf import settings
-from django.urls import include, path
 from django.contrib import admin
-
-from wagtail.admin import urls as wagtailadmin_urls
+from django.urls import include
+from django.urls import path
 from wagtail import urls as wagtail_urls
+from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
 from search import views as search_views
-
-from django.urls import path
-
+from user_group_management.views import GroupProfileListView, GroupMembersView
 
 urlpatterns = [
     path('django-admin/', admin.site.urls),
     path('admin/', include(wagtailadmin_urls)),
+    path('group/', GroupProfileListView.as_view(), name='group_list'),
+    path('group/<int:group_id>/', GroupMembersView.as_view(), name='group_members'),
     path('documents/', include(wagtaildocs_urls)),
     path('search/', search_views.search, name='search'),
     path(r'', include('allauth.urls')),
     path(r'', include(wagtail_urls)),
 ]
-
 
 if settings.DEBUG:
     from django.conf.urls.static import static

@@ -5,7 +5,7 @@ from wagtail.core import hooks
 
 @hooks.register('register_admin_menu_item')
 def register_group_menu_item():
-    return MenuItem('My Usergroup', reverse('group_list'), classnames='icon icon-group',
+    return MenuItem('My Usergroups', reverse('group_list'), classnames='icon icon-group',
                     order=10000)
 
 
