@@ -3,6 +3,7 @@ from django.contrib.auth.models import Group
 from django.core.exceptions import ValidationError
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
+from django.views import View
 from django.views.generic import TemplateView
 from wagtail.admin import messages
 
@@ -79,3 +80,17 @@ class GroupMembersView(TemplateView):
         users = User.objects.filter(id__in=user_ids)
         group.user_set.add(*users)
         return redirect(reverse('group_members', args=[group.id]))
+
+
+class RemoveMemberView(View):
+    def post(self, request, *args, **kwargs):
+        user_id = self.kwargs.get('user_id')
+        group_id = self.kwargs.get('group_id')
+
+        user = get_object_or_404(User, id=user_id)
+        group = get_object_or_404(Group, id=group_id)
+
+        group.user_set.remove(user)
+        messages.success(request, 'User removed from group successfully')
+
+        return redirect('group_members', group_id=group_id)

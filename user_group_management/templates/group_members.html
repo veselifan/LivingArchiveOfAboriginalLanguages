@@ -4,7 +4,6 @@
 {% block titletag %}Group Members{% endblock %}
 
 {% block extra_css %}
-    <!-- For Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 {% endblock %}
 
@@ -19,40 +18,44 @@
         </div>
     </header>
 
-    <!-- Member List -->
     <div class="content nice-padding">
         <table class="table table-striped">
             <thead>
-                <tr>
-                    <th>name</th>
-                    <th>email</th>
-                    <!-- Add other columns according to your requirements -->
-                </tr>
+            <tr>
+                <th>name</th>
+                <th>email</th>
+            </tr>
             </thead>
             <tbody>
             {% for user in members %}
                 <tr>
                     <td>{{ user.username }}</td>
                     <td>{{ user.email }}</td>
-                    <!-- Add other columns according to your requirements -->
+                    <td>
+                        <form method="post" action="{% url 'remove_member' group.id user.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary">remove</button>
+                        </form>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
     </div>
 
-    <!-- Form to add members -->
     <div class="content nice-padding">
         <h2>Add members</h2>
         <form method="post">
             {% csrf_token %}
             <div class="form-group">
-            {% for user in users %}
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="users" value="{{ user.id }}" id="user{{ user.id }}">
-                    <label class="form-check-label" for="user{{ user.id }}">{{ user.username }}</label>
-                </div>
-            {% endfor %}
+                {% for user in users %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="users" value="{{ user.id }}"
+                               id="user{{ user.id }}">
+                        <label class="form-check-label" for="user{{ user.id }}">{{ user.username }}
+                            | {{ user.email }}</label>
+                    </div>
+                {% endfor %}
             </div>
             <button type="submit" class="btn btn-primary">add members</button>
         </form>
@@ -60,6 +63,5 @@
 {% endblock %}
 
 {% block extra_js %}
-    <!-- For Bootstrap JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 {% endblock %}

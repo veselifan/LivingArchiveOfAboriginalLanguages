@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import GroupMembersView
+from .views import GroupMembersView, RemoveMemberView
 
 app_name = 'user_group_management'
 urlpatterns = [
