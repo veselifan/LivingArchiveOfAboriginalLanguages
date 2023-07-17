@@ -12,7 +12,7 @@ django-allauth==0.54.0
 django-appconf==1.0.5
 django-enumchoicefield==3.0.1
 django-filter==22.1
-django-keys==1.0.4
+django-keys
 django-mirage-field==1.4.0
 django-modelcluster==6.0
 django-nullmailer==0.3
