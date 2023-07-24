@@ -206,50 +206,51 @@ WAGTAILSEARCH_BACKENDS = {
     }
 }
 
-#LOGGING = {
-#'version': 1,
-#'disable_existing_loggers': False,
-#'filters': {
-#    'require_debug_false': {
-#        '()': 'django.utils.log.RequireDebugFalse',
-#    },
-#},
-#'formatters': {
-#    'verbose': {
-#        'format': "[%(asctime)s] %(levelname)s [%(pathname)s:%(lineno)s] %(message)s",
-#        'datefmt': "%d/%b/%Y %H:%M:%S"
-#    },
-#    'simple': {
-#        'format': '%(levelname)s %(message)s'
-#    },
-#},
-#'handlers': {
-#    'file': {
-#        'level': 'ERROR',
-#        'filters': ['require_debug_false'],
-#        'class': 'logging.FileHandler',
-#        'filename': os.path.join(ev('APP_LOG_DIR'), "debug.log"),
-#        'filename': "./debug.log",
-#        "formatter": "verbose",
-#    },
-#},
-#'loggers': {
-#    'django': {
-#        'handlers': ['file'],
-#        'level': 'ERROR',
-#        'propagate': True,
-#    },
-#    'django.request': {
-#        'handlers': ['file'],
-#        'level': 'ERROR',
-#        'propagate': True,
-#    },
-#    'django.server': {
-#        'handlers': ['file',],
-#        'level': 'ERROR',
-#        'propagate': True,
-#    },
-#}
+LOGGING = {
+'version': 1,
+'disable_existing_loggers': False,
+'filters': {
+   'require_debug_false': {
+       '()': 'django.utils.log.RequireDebugFalse',
+   },
+},
+'formatters': {
+   'verbose': {
+       'format': "[%(asctime)s] %(levelname)s [%(pathname)s:%(lineno)s] %(message)s",
+       'datefmt': "%d/%b/%Y %H:%M:%S"
+   },
+   'simple': {
+       'format': '%(levelname)s %(message)s'
+   },
+},
+'handlers': {
+   'file': {
+       'level': 'ERROR',
+       'filters': ['require_debug_false'],
+       'class': 'logging.FileHandler',
+       'filename': os.path.join(('APP_LOG_DIR'), "debug.log"),
+       'filename': "./debug.log",
+       "formatter": "verbose",
+   },
+},
+'loggers': {
+   'django': {
+       'handlers': ['file'],
+       'level': 'ERROR',
+       'propagate': True,
+   },
+   'django.request': {
+       'handlers': ['file'],
+       'level': 'ERROR',
+       'propagate': True,
+   },
+   'django.server': {
+       'handlers': ['file',],
+       'level': 'ERROR',
+       'propagate': True,
+   },
+},
+}
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
 BASE_URL = 'http://indigenousengineering.org.au'
