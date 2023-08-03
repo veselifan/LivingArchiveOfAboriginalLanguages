@@ -1,0 +1,58 @@
+{% extends "wagtailadmin/base.html" %}
+{% load wagtailadmin_tags static %}
+
+{% block titletag %}My Groups{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+{% endblock %}
+
+{% block content %}
+    <header class="nice-padding hasform">
+        <div class="row">
+            <div class="left">
+                <div class="col header-title">
+                    <h1>My Groups</h1>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="content nice-padding">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Group Name</th>
+                <th>Operation</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for group in groups %}
+                <tr>
+                    <td>{{ group.group.name }}</td>
+                    <td>
+                        <a href="{% url 'group_members' group.group.id %}" class="btn btn-primary">
+                            view users
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="content nice-padding">
+        <h2>Add Group</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <input type="text" name="group_name" placeholder="Usergroup name" required class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Add Group</button>
+        </form>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+{% endblock %}
