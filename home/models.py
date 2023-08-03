@@ -1,3 +1,4 @@
+import os
 from pydoc import classname
 from django.db import models
 from django.shortcuts import render
@@ -9,7 +10,8 @@ from wagtail.contrib.forms.models import (
     AbstractEmailForm,
     AbstractFormField
 )
-
+from dotenv import load_dotenv
+load_dotenv()
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 
 from wagtail.admin.edit_handlers import (
@@ -21,9 +23,8 @@ from wagtail.admin.edit_handlers import (
 #from captcha.fields import ReCaptchaField
 #from wagtail.core import blocks
 #from wagtailstreamforms.fields import BaseField, register
-
-from djangokeys import DjangoKeys
-keys=DjangoKeys ("./livingarchive/settings/.env")
+  #get google maps api key from .env
+api_key=str(os.getenv("API_KEY"))
 
 #@register('recaptcha')
 class HomePage(AbstractEmailForm, Page):
@@ -33,8 +34,6 @@ class HomePage(AbstractEmailForm, Page):
     """to limit only 1 home page"""
     max_count = 1
     #captcha = ReCaptchaField()
-    #get google maps api key from .env
-    api_key = keys.str("API_KEY")
 
     banner_title = models.CharField(max_length=100, blank=False, null=True)
     intro = RichTextField(blank=True)
