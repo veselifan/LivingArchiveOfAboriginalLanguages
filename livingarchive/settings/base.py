@@ -228,7 +228,7 @@ LOGGING = {
        'level': 'ERROR',
        'filters': ['require_debug_false'],
        'class': 'logging.FileHandler',
-       'filename': os.path.join(('APP_LOG_DIR'), "debug.log"),
+      # 'filename': os.path.join(ev('APP_LOG_DIR'), "debug.log"),
        'filename': "./debug.log",
        "formatter": "verbose",
    },
