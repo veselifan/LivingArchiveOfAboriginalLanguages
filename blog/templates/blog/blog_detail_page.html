@@ -51,7 +51,11 @@
     </header>
     {% image self.image original as blog_img %}
     <!--style="max-height:400px;-->
-    <img src="{{ blog_img.url }}" alt="{{ blog_img.alt }}" style="max-height:400px;margin: auto;display: block;">
+    {% if accept %}
+        <img src="{{ blog_img.url }}" alt="{{ blog_img.alt }}" style="max-height:400px;margin: auto;display: block;">
+    {% else %}
+        <img src="{{ blog_img.url }}" alt="{{ blog_img.alt }}" style="max-height:100px; margin:auto; display:block;">
+    {% endif %}
     <p style="color: red; font-size: larger; width:800px; margin: auto;  text-align: left; text-transform: initial; border: 2px solid red; padding: 10px;">
         {% if not accept %}
             ⚠️ This page is private, you will be limited in access.
