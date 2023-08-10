@@ -1,3 +1,3 @@
-source ./venv/bin/activate
-venv/bin/python manage.py runserver
+source ./env/bin/activate
+env/bin/python manage.py runserver
 
