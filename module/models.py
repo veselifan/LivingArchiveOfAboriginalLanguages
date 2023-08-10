@@ -1,3 +1,4 @@
+import os
 from django.db import models
 #from mirage import fields
 from wagtail.core.models import Page
@@ -7,20 +8,19 @@ from wagtailgmaps.edit_handlers import MapFieldPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtailvideos.edit_handlers import VideoChooserPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
-from djangokeys import DjangoKeys
 from django.contrib.auth.models import User
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
-keys=DjangoKeys ("./livingarchive/settings/.env")
-
+from dotenv import load_dotenv
+load_dotenv()
+#get google maps api key from .env
+api_key=str(os.getenv("API_KEY"))
 
 class ModuleListingPage (Page):
     """Listing page list all the module detail pages"""
     template = "module/module_listing_page.html"
     """to limit only 1 home page"""
     max_count = 1
-    #get google maps api key from .env
-    api_key = keys.str("API_KEY")
     #to get detail from module detail page
     
     def get_context(self, request, *args, **kwargs):

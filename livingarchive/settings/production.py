@@ -10,7 +10,7 @@ MIRAGE_SECRET_KEY = 'gdhhgi%&HGKJ*F___fdffhdjfhsh===%@ghg'
 ALLOWED_HOSTS=['indigenousengineering.org.au','livingarchive.teachingforchange.edu.au','127.0.0.1','138.80.128.154','localhost']
 
 EMAIL_BACKEND = 'nullmailer.backend.EmailBackend'
-WAGTAILADMIN_BASE_URL="http://localhost:8000"
+WAGTAILADMIN_BASE_URL="http://localhost:8005"
 
 try:
     from .local import *

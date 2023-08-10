@@ -1,7 +1,7 @@
-import os
 from django.contrib.auth.models import User
 from django.db import models
 from django.template.response import TemplateResponse
+from djangokeys import DjangoKeys
 from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
 from wagtail.core.blocks import StructBlock, CharBlock
 from wagtail.core.fields import RichTextField
@@ -15,9 +15,8 @@ from wagtail.models import PAGE_TEMPLATE_VAR
 from wagtailgmaps.edit_handlers import MapFieldPanel
 from wagtailvideos.edit_handlers import VideoChooserPanel
 
-from dotenv import load_dotenv
-load_dotenv()
-api_key=str(os.getenv("API_KEY"))
+keys = DjangoKeys("./livingarchive/settings/.env")
+
 
 class BlogListingPage(Page):
     """Listing page list all the blog detail pages"""
@@ -26,6 +25,7 @@ class BlogListingPage(Page):
     """to limit only 1 home page"""
     max_count = 1
     # get google maps api key from .env
+    api_key = keys.str("API_KEY")
 
     # to get detail from blog detail page
 
@@ -53,6 +53,7 @@ class BlogDetailPage(Page):
     # base_form_class = CustomPageForm
     # edit_handler = CustomEditView
 
+    password_required_template = "blog/password_required.html"
     template = "blog/blog_detail_page.html"
     date = models.DateField("Post date")
     intro = models.CharField(max_length=250)
@@ -100,7 +101,7 @@ class BlogDetailPage(Page):
     #     tester = self.permissions_for_user(request.user)
     #     # if self.permissions_for_user(request.user):
     #     #     return 'blog/password_required.html'
-    #     # 检查用户是否有查看权限
+    #     # Check if the user has permission to view
     #     # print(self.get_view_restrictions())
     #     # can_view = permissions.can_view()
     #     # blog_post = self.specific
@@ -118,8 +119,7 @@ class BlogDetailPage(Page):
 
         if self.context_object_name:
             context[self.context_object_name] = self
-
-        context["accept"] = kwargs["accept"] if "accept" in kwargs else True
+        context["accept"] = kwargs["accept"]
         return context
 
     def serve(self, request, *args, **kwargs):
@@ -132,6 +132,3 @@ class BlogDetailPage(Page):
             self.get_template(request, *args, **kwargs),
             self.get_context(request, *args, **kwargs),
         )
-
-    def get_password_restriction(self):
-        return self.get_view_restrictions().filter(restriction_type="password").first()

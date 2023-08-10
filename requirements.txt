@@ -12,7 +12,6 @@ django-allauth==0.54.0
 django-appconf==1.0.5
 django-enumchoicefield==3.0.1
 django-filter==22.1
-django-keys==1.0.4
 django-mirage-field==1.4.0
 django-modelcluster==6.0
 django-nullmailer==0.3
@@ -25,6 +24,7 @@ django-treebeard==4.7
 djangorestframework==3.14.0
 draftjs-exporter==2.1.7
 et-xmlfile==1.1.0
+load_dotenv
 html5lib==1.1
 idna==3.4
 l18n==2021.3
@@ -51,5 +51,6 @@ wagtail-generic-chooser==0.5.1
 wagtailgmaps==1.0.1
 wagtailstreamforms==4.0.4
 wagtailvideos==4.2.0
+wagtailmenus==3.1.8
 webencodings==0.5.1
 Willow==1.4.1
