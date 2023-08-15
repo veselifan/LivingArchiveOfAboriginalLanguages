@@ -1,7 +1,7 @@
-import os
 from django.contrib.auth.models import User
 from django.db import models
 from django.template.response import TemplateResponse
+from djangokeys import DjangoKeys
 from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
 from wagtail.core.blocks import StructBlock, CharBlock
 from wagtail.core.fields import RichTextField
@@ -15,9 +15,8 @@ from wagtail.models import PAGE_TEMPLATE_VAR
 from wagtailgmaps.edit_handlers import MapFieldPanel
 from wagtailvideos.edit_handlers import VideoChooserPanel
 
-from dotenv import load_dotenv
-load_dotenv()
-api_key=str(os.getenv("API_KEY"))
+keys = DjangoKeys("./livingarchive/settings/.env")
+
 
 class BlogListingPage(Page):
     """Listing page list all the blog detail pages"""
@@ -26,7 +25,8 @@ class BlogListingPage(Page):
     """to limit only 1 home page"""
     max_count = 1
     # get google maps api key from .env
-
+    api_key = keys.str("API_KEY")
+    # subpage_types = ['BlogDetailPage']
     # to get detail from blog detail page
 
     def get_context(self, request, *args, **kwargs):
@@ -37,6 +37,8 @@ class BlogListingPage(Page):
         )
 
         return context
+
+
 
 
 class LinkBlock(StructBlock):
@@ -95,6 +97,7 @@ class BlogDetailPage(Page):
         MapFieldPanel("address", latlng=True, zoom=4),
         StreamFieldPanel("links"),
     ]
+    subpage_types = []
 
     # def get_template(self, request, *args, **kwargs):
     #     tester = self.permissions_for_user(request.user)
