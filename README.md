@@ -12,7 +12,6 @@ add .env file to livingarchive/settings/ with API_KEY=
 
 #
 env\Scripts\activate    #activating in windows
-python manage.py runserver
 
 # To update database
 python3 manage.py makemigrations
