@@ -12,14 +12,14 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-from djangokeys import DjangoKeys
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
 PASSWORD_REQUIRED_TEMPLATE = "password_required.html"
 
-keys = DjangoKeys("./livingarchive/settings/.env")
-api_key = keys.str("API_KEY")
+from dotenv import load_dotenv
+keys = load_dotenv("./livingarchive/settings/.env")
+api_key = str(os.getenv("API_KEY"))
 
 WAGTAIL_ADDRESS_MAP_CENTER = "Australia"  # It must be a properly formatted address
 WAGTAIL_ADDRESS_MAP_KEY = str(api_key)
