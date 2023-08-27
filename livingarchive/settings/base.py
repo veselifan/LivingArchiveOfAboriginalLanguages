@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     "wagtail.search",
     "wagtail.admin",
     "wagtail.core",
+    "wagtailcaptcha",
     "captcha",
     "wagtailmenus",
     "user_group_management",
@@ -260,11 +261,11 @@ ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
 ACCOUNT_USERNAME_BLACKLIST = ["admin", "moderator", "editor"]
 ACCOUNT_USERNAME_MIN_LENGTH = 3
 ACCOUNT_SIGNUP_FORM_CLASS = "livingarchive.forms.LocalSignupForm"
-RECAPTCHA_PUBLIC_KEY = "6Lcq534jAAAAAI9rFdVDOopTwSp92z9dox_FEEj1"
-RECAPTCHA_PRIVATE_KEY = "6Lcq534jAAAAAGcusv7gqVgT1vMY6CCaBJmkBE-A"
+# RECAPTCHA_PUBLIC_KEY = "6Lcq534jAAAAAI9rFdVDOopTwSp92z9dox_FEEj1"
+# RECAPTCHA_PRIVATE_KEY = "6Lcq534jAAAAAGcusv7gqVgT1vMY6CCaBJmkBE-A"
 
-# RECAPTCHA_PUBLIC_KEY = "6LfsIJYjAAAAAMOjW3Ysb4IdNQyxRatxcu1PmavL"
-# RECAPTCHA_PRIVATE_KEY = "6LfsIJYjAAAAAJMlLIzgjkOXPAdnqffi1syvL3o2"
+RECAPTCHA_PUBLIC_KEY = "6LfsIJYjAAAAAMOjW3Ysb4IdNQyxRatxcu1PmavL"
+RECAPTCHA_PRIVATE_KEY = "6LfsIJYjAAAAAJMlLIzgjkOXPAdnqffi1syvL3o2"
 
 NOCAPTCHA = True
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
