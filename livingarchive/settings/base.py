@@ -266,6 +266,5 @@ ACCOUNT_SIGNUP_FORM_CLASS = "livingarchive.forms.LocalSignupForm"
 
 RECAPTCHA_PUBLIC_KEY = "6LfsIJYjAAAAAMOjW3Ysb4IdNQyxRatxcu1PmavL"
 RECAPTCHA_PRIVATE_KEY = "6LfsIJYjAAAAAJMlLIzgjkOXPAdnqffi1syvL3o2"
-
 NOCAPTCHA = True
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
