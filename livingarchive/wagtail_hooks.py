@@ -67,11 +67,11 @@ def add_user_group_management_menu_item(request, menu_items):
             menu_items[:] = [item for item in menu_items if item.name != "settings"]
 
 
-@hooks.register("construct_explorer_page_queryset")
-def show_own_pages_only(parent_page, pages, request):
+#@hooks.register("construct_explorer_page_queryset")
+#def show_own_pages_only(parent_page, pages, request):
     # superuser
     # if request.user.is_superuser:
     #     return pages
 
     # user's pages
-    return pages.filter(owner=request.user)
+ #   return pages.filter(owner=request.user)
