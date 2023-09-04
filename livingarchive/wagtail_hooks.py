@@ -1,7 +1,9 @@
+from django.templatetags.static import static
 from django.urls import reverse
 from wagtail import hooks
+from wagtail.admin.action_menu import PageActionMenu
 from wagtail.admin.menu import MenuItem
-from wagtail.models import PageViewRestriction, BaseViewRestriction
+from wagtail.models import PageViewRestriction, BaseViewRestriction, Page
 from wagtail.wagtail_hooks import require_wagtail_login
 
 from blog.models import BlogDetailPage
@@ -66,12 +68,16 @@ def add_user_group_management_menu_item(request, menu_items):
         if not user.groups.filter(name="contributor").exists():
             menu_items[:] = [item for item in menu_items if item.name != "settings"]
 
+@hooks.register("construct_explorer_page_queryset")
+def show_own_pages_only(parent_page, pages, request):
+    user = request.user
 
-#@hooks.register("construct_explorer_page_queryset")
-#def show_own_pages_only(parent_page, pages, request):
     # superuser
-    # if request.user.is_superuser:
-    #     return pages
+    if user.is_superuser:
+        print("管理员")
+        return pages
+    print("普通")
 
-    # user's pages
- #   return pages.filter(owner=request.user)
+
+    return pages.filter(owner=request.user)
+

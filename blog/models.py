@@ -1,8 +1,9 @@
 from django.contrib.auth.models import User
 from django.db import models
-import os
 from django.template.response import TemplateResponse
-from dotenv import load_dotenv
+from django.urls import reverse
+from django.utils.html import format_html
+from djangokeys import DjangoKeys
 from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
 from wagtail.core.blocks import StructBlock, CharBlock
 from wagtail.core.fields import RichTextField
@@ -15,8 +16,8 @@ from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.models import PAGE_TEMPLATE_VAR
 from wagtailgmaps.edit_handlers import MapFieldPanel
 from wagtailvideos.edit_handlers import VideoChooserPanel
-keys=load_dotenv("./livingarchive/settings/.env")
-api_key=str(os.getenv("API_KEY"))
+
+keys = DjangoKeys("./livingarchive/settings/.env")
 
 
 class BlogListingPage(Page):
@@ -25,7 +26,8 @@ class BlogListingPage(Page):
     template = "blog/blog_listing_page.html"
     """to limit only 1 home page"""
     max_count = 1
-  
+    # get google maps api key from .env
+    api_key = keys.str("API_KEY")
     # subpage_types = ['BlogDetailPage']
     # to get detail from blog detail page
 
@@ -37,8 +39,6 @@ class BlogListingPage(Page):
         )
 
         return context
-
-
 
 
 class LinkBlock(StructBlock):
@@ -99,6 +99,13 @@ class BlogDetailPage(Page):
     ]
     subpage_types = []
 
+    # def get_admin_display_title(self):
+    #     return format_html(
+    #         '<a href="{}">{}</a>',
+    #         reverse("wagtailadmin_pages:edit", args=[self.id]),
+    #         self.title,
+    #     )
+
     # def get_template(self, request, *args, **kwargs):
     #     tester = self.permissions_for_user(request.user)
     #     # if self.permissions_for_user(request.user):
@@ -123,11 +130,13 @@ class BlogDetailPage(Page):
             context[self.context_object_name] = self
 
         context["accept"] = kwargs["accept"] if "accept" in kwargs else True
+        context["is_private"] = self.is_private()
         return context
 
     def serve(self, request, *args, **kwargs):
         if "accept" not in kwargs:
             kwargs["accept"] = True
+        kwargs["is_private"] = self.is_private()
         request.is_preview = False
 
         return TemplateResponse(
@@ -138,3 +147,6 @@ class BlogDetailPage(Page):
 
     def get_password_restriction(self):
         return self.get_view_restrictions().filter(restriction_type="password").first()
+
+    def is_private(self):
+        return self.view_restrictions.exists()

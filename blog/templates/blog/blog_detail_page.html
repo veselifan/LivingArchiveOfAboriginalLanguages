@@ -58,13 +58,19 @@
     {% else %}
     <img src="{{ blog_img.url }}" alt="{{ blog_img.alt }}" style="max-height:100px; margin:auto; display:block;">
     {% endif %}
-    <!--<p style="color: red; font-size: larger; width:800px; margin: auto;  text-align: left; text-transform: initial; border: 2px solid red; padding: 10px;">
-        {% if not accept %}
+
+    {% if not accept %}
+        <p style="color: red; font-size: larger; width:800px; margin: auto;  text-align: left; text-transform: initial; border: 2px solid red; padding: 10px;">
+
             ⚠️ This page is private, you will be limited in access.
-        {% else %}
+        </p>
+    {% elif is_private %}
+        <p style="color: red; font-size: larger; width:800px; margin: auto;  text-align: left; text-transform: initial; border: 2px solid red; padding: 10px;">
             ⚠️ If you have access, please do not share without permission.
-        {% endif %}
-    </p>-->
+
+        </p>
+    {% endif %}
+
     {% if self.video %}
     {% load wagtailvideos_tags %}
     {% video self.video autoplay controls width=600 %}
