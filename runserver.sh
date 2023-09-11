@@ -1,3 +1,3 @@
-source ./env/bin/activate
-env/bin/python manage.py runserver
+.\env\Scripts\activate.bat
+python manage.py runserver
 
