@@ -1,8 +1,7 @@
+import os
 from django.contrib.auth.models import User
 from django.db import models
-import os
 from django.template.response import TemplateResponse
-from dotenv import load_dotenv
 from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
 from wagtail.core.blocks import StructBlock, CharBlock
 from wagtail.core.fields import RichTextField
@@ -11,22 +10,27 @@ from wagtail.core.fields import StreamField
 # from mirage import fields
 from wagtail.core.models import Page
 from wagtail.documents.blocks import DocumentChooserBlock
+from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.models import PAGE_TEMPLATE_VAR
+from wagtail_pdf_view.mixins import PdfViewPageMixin
 from wagtailgmaps.edit_handlers import MapFieldPanel
 from wagtailvideos.edit_handlers import VideoChooserPanel
-keys=load_dotenv("./livingarchive/settings/.env")
-api_key=str(os.getenv("API_KEY"))
+from wagtailmedia.edit_handlers import MediaChooserPanel
 
+from dotenv import load_dotenv
+load_dotenv()
+api_key=str(os.getenv("API_KEY"))
 
 class BlogListingPage(Page):
     """Listing page list all the blog detail pages"""
 
     template = "blog/blog_listing_page.html"
     """to limit only 1 home page"""
-    max_count = 1
-  
-    # subpage_types = ['BlogDetailPage']
+    max_count = 6
+
+    # get google maps api key from .env
+
     # to get detail from blog detail page
 
     def get_context(self, request, *args, **kwargs):
@@ -35,10 +39,9 @@ class BlogListingPage(Page):
         context["posts"] = (
             BlogDetailPage.objects.live().all().order_by("-first_published_at")
         )
-
+        print('-----')
+        print(context["posts"])
         return context
-
-
 
 
 class LinkBlock(StructBlock):
@@ -49,11 +52,16 @@ class LinkBlock(StructBlock):
     )
 
 
-class BlogDetailPage(Page):
+class BlogDetailPage(Page, PdfViewPageMixin):
     """Blog detail page"""
 
     # base_form_class = CustomPageForm
     # edit_handler = CustomEditView
+
+    ROUTE_CONFIG = [
+        ("html", r'^$'),
+        ("pdf", r'^pdf/$'),
+    ]
 
     template = "blog/blog_detail_page.html"
     date = models.DateField("Post date")
@@ -81,6 +89,23 @@ class BlogDetailPage(Page):
 
     address = models.CharField(max_length=255, null=True)
 
+    location = models.CharField(max_length=255, null=True, blank=True)
+    audio = models.ForeignKey(
+        "wagtailmedia.Media",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+    )
+    pdf = models.ForeignKey(
+        'wagtaildocs.Document',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+'
+    )
+    language = models.CharField(max_length=255, null=True, blank=True)
+
     links = StreamField(
         [
             ("link", LinkBlock()),
@@ -91,20 +116,17 @@ class BlogDetailPage(Page):
     content_panels = Page.content_panels + [
         FieldPanel("date"),
         FieldPanel("intro"),
+        FieldPanel("language"),
+        FieldPanel("location"),
         ImageChooserPanel("image"),
         VideoChooserPanel("video"),
+        MediaChooserPanel("audio"),
         FieldPanel("body", classname="full"),
+        DocumentChooserPanel("pdf"),
         MapFieldPanel("address", latlng=True, zoom=4),
         StreamFieldPanel("links"),
     ]
-    subpage_types = []
 
-    # def get_admin_display_title(self):
-    #     return format_html(
-    #         '<a href="{}">{}</a>',
-    #         reverse("wagtailadmin_pages:edit", args=[self.id]),
-    #         self.title,
-    #     )
     # def get_template(self, request, *args, **kwargs):
     #     tester = self.permissions_for_user(request.user)
     #     # if self.permissions_for_user(request.user):
@@ -129,14 +151,12 @@ class BlogDetailPage(Page):
             context[self.context_object_name] = self
 
         context["accept"] = kwargs["accept"] if "accept" in kwargs else True
-        context["is_private"] = self.is_private()
         return context
 
     def serve(self, request, *args, **kwargs):
         if "accept" not in kwargs:
             kwargs["accept"] = True
         request.is_preview = False
-        kwargs["is_private"] = self.is_private()
 
         return TemplateResponse(
             request,
@@ -146,5 +166,3 @@ class BlogDetailPage(Page):
 
     def get_password_restriction(self):
         return self.get_view_restrictions().filter(restriction_type="password").first()
-    def is_private(self):
-        return self.view_restrictions.exists()

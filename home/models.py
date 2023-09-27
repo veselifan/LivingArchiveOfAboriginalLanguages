@@ -21,7 +21,7 @@ from wagtail.admin.edit_handlers import (
 from wagtail.core.fields import RichTextField
 from wagtail.contrib.forms.models import AbstractFormField, AbstractEmailForm
 
-from wagtailcaptcha.models import WagtailCaptchaEmailForm
+#from wagtailcaptcha.models import WagtailCaptchaEmailForm
 from dotenv import load_dotenv
 load_dotenv()
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
@@ -32,26 +32,32 @@ from wagtail.admin.edit_handlers import (
     InlinePanel,
     MultiFieldPanel
 )
-from captcha.fields import CaptchaField
+#from captcha.fields import CaptchaField
 #from wagtail.core import blocks
 #from wagtailstreamforms.fields import BaseField, register
   #get google maps api key from .env
 api_key=str(os.getenv("API_KEY"))
 
 #@register('recaptcha')
-class HomePage(WagtailCaptchaEmailForm, Page):
+class HomePage(Page):
     """Home Page model"""
     templates = "home/home_page.html"
 
     """to limit only 1 home page"""
     max_count = 1
-    captcha = CaptchaField()
+    #captcha = CaptchaField()
 
     banner_title = models.CharField(max_length=100, blank=False, null=True)
     intro = RichTextField(blank=True)
     thank_you_text = RichTextField(blank=True)
 
     landing_page_template = "home/home_page_landing.html"
+
+    # [+]
+    from_address = models.CharField(max_length=256)
+    to_address = models.CharField(max_length=256)
+    subject = models.CharField(max_length=256)
+    # [+]
 
     content_panels = AbstractEmailForm.content_panels + [
         FieldPanel('intro'),
