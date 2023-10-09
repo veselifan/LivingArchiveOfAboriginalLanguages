@@ -1,7 +1,13 @@
 import os
+import re
+from datetime import datetime
+
+import requests
 from django.contrib.auth.models import User
 from django.db import models
 from django.template.response import TemplateResponse
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
 from wagtail.core.blocks import StructBlock, CharBlock
 from wagtail.core.fields import RichTextField
@@ -64,9 +70,11 @@ class BlogDetailPage(Page, PdfViewPageMixin):
     ]
 
     template = "blog/blog_detail_page.html"
-    date = models.DateField("Post date")
-    intro = models.CharField(max_length=250)
-    body = RichTextField(blank=True)
+    date = models.PositiveIntegerField("Post date", choices=[
+        (year, year) for year in range(1970, datetime.now().year+1)
+    ], default=1970, null=True, blank=True)
+    intro = models.CharField(max_length=250, null=True, blank=True)
+    body = RichTextField(null=True, blank=True)
 
     image = models.ForeignKey(
         "wagtailimages.Image",
@@ -87,9 +95,12 @@ class BlogDetailPage(Page, PdfViewPageMixin):
 
     email = User(Page.owner).email.replace("@", " at ")
 
-    address = models.CharField(max_length=255, null=True)
+    address = models.CharField(max_length=255, null=True, blank=True)
 
-    location = models.CharField(max_length=255, null=True, blank=True)
+    # hidden field, not show, for backup
+    address_backup = models.CharField(max_length=255, null=True, blank=True)
+
+    # location = models.CharField(max_length=255, null=True, blank=True)
     audio = models.ForeignKey(
         "wagtailmedia.Media",
         null=True,
@@ -110,14 +121,15 @@ class BlogDetailPage(Page, PdfViewPageMixin):
         [
             ("link", LinkBlock()),
         ],
-        blank=True,
+        null=True,
+        blank=True
     )
 
     content_panels = Page.content_panels + [
         FieldPanel("date"),
         FieldPanel("intro"),
         FieldPanel("language"),
-        FieldPanel("location"),
+        # FieldPanel("location"),
         ImageChooserPanel("image"),
         VideoChooserPanel("video"),
         MediaChooserPanel("audio"),
@@ -166,3 +178,26 @@ class BlogDetailPage(Page, PdfViewPageMixin):
 
     def get_password_restriction(self):
         return self.get_view_restrictions().filter(restriction_type="password").first()
+
+
+def address2latlng(address):
+    """Get latlng from google map api"""
+    url = f'https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={api_key}'
+    response = requests.get(url, timeout=5)
+    data = response.json()
+    if data['status'] == 'OK':
+        location = data['results'][0]['geometry']['location']
+        latitude = location['lat']
+        longitude = location['lng']
+        print(f'lat：{longitude}, long：{latitude}')
+        return ','.join([str(latitude), str(longitude)])
+    return ''
+
+
+@receiver(pre_save, sender=BlogDetailPage)
+def blog_details_pre_save(sender, instance, **kwargs):
+    pattern = r'^-?\d+\.\d+,-?\d+\.\d+$'
+    if not re.match(pattern, instance.address):
+        # if is not a valid latlng, get latlng from google map api
+        instance.address_backup = instance.address
+        instance.address = address2latlng(instance.address)
