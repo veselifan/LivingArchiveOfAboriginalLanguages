@@ -1,9 +1,11 @@
-#copy to venv/lib/python3.11/site-packages/nullmailer/backend.py
 from django.conf import settings
 from django.core.mail.backends.base import BaseEmailBackend
 import threading
 import os
 import time
+import sys
+if sys.version_info[0] >= 3:
+    unicode = str
 
 NULLMAILER_SPOOLDIR = getattr(settings, 'NULLMAILER_SPOOLDIR', '/var/spool/nullmailer')
 
@@ -17,9 +19,9 @@ def to_utf8(addr):
     #
     #  https://tools.ietf.org/html/rfc6531
     #  http://stackoverflow.com/a/14778640
-    if isinstance(addr, bytes):
-        return addr.encode('utf-8')
-    return addr
+    if isinstance(str(addr),unicode ):
+        return str(addr).encode('utf-8')
+    return str(addr)
 
 class EmailBackend(BaseEmailBackend):
 
@@ -35,7 +37,7 @@ class EmailBackend(BaseEmailBackend):
             return
         for email_message in email_messages:
             from_email = to_utf8(email_message.from_email)
-            to_lines = '\n'.join([to_utf8(addr) for addr in email_message.to])
+            to_lines = '\n'.join([str(to_utf8(addr)) for addr in email_message.to])
             msg = "%s\n%s\n\n%s" % ( from_email, to_lines, email_message.message().as_string())
             if self._send(msg, pid, tid):
                 num_sent += 1

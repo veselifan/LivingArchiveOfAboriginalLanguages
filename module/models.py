@@ -1,11 +1,11 @@
 import os
 from django.db import models
 #from mirage import fields
-from wagtail.core.models import Page
-from wagtail.core.fields import RichTextField
-from wagtail.admin.edit_handlers import FieldPanel
+from wagtail.models import Page
+from wagtail.fields import RichTextField
+from wagtail.admin.panels import FieldPanel
 from wagtailgmaps.edit_handlers import MapFieldPanel
-from wagtail.images.edit_handlers import ImageChooserPanel
+#from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtailvideos.edit_handlers import VideoChooserPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from django.contrib.auth.models import User
@@ -62,7 +62,7 @@ class ModuleDetailPage(Page):
     content_panels = Page.content_panels + [
         FieldPanel('date'),
         FieldPanel('intro'),
-        ImageChooserPanel("image"),
+       # ImageChooserPanel("image"),
         VideoChooserPanel('video'),
         FieldPanel('body', classname="full"),
     ]

@@ -8,16 +8,15 @@ from django.db import models
 from django.template.response import TemplateResponse
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
-from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
-from wagtail.core.blocks import StructBlock, CharBlock
-from wagtail.core.fields import RichTextField
-from wagtail.core.fields import StreamField
+from wagtail.admin.panels import FieldPanel
+from wagtail.blocks import StructBlock, CharBlock
+from wagtail.fields import RichTextField
+from wagtail.fields import StreamField
 
 # from mirage import fields
-from wagtail.core.models import Page
+from wagtail.models import Page
 from wagtail.documents.blocks import DocumentChooserBlock
-from wagtail.documents.edit_handlers import DocumentChooserPanel
-from wagtail.images.edit_handlers import ImageChooserPanel
+#from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.models import PAGE_TEMPLATE_VAR
 from wagtail_pdf_view.mixins import PdfViewPageMixin
 from wagtailgmaps.edit_handlers import MapFieldPanel
@@ -130,13 +129,13 @@ class BlogDetailPage(Page, PdfViewPageMixin):
         FieldPanel("intro"),
         FieldPanel("language"),
         # FieldPanel("location"),
-        ImageChooserPanel("image"),
+        FieldPanel("image"),
         VideoChooserPanel("video"),
         MediaChooserPanel("audio"),
         FieldPanel("body", classname="full"),
-        DocumentChooserPanel("pdf"),
+        FieldPanel("pdf"),
         MapFieldPanel("address", latlng=True, zoom=4),
-        StreamFieldPanel("links"),
+        FieldPanel("links"),
     ]
 
     # def get_template(self, request, *args, **kwargs):
