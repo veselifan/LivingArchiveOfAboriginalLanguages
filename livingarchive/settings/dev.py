@@ -8,7 +8,7 @@ SECRET_KEY = 'django-insecure-bmxu&vi39=^=a^1zto6u5t(1dr1f5a^47_of!+m%p6ar*w5a^v
 MIRAGE_SECRET_KEY = 'gdhhgi%&HGKJ*F___fdffhdjfhsh===%@ghg'
 
 # SECURITY WARNING: define the correct hosts in production!
-ALLOWED_HOSTS = ['*','localhost'] 
+ALLOWED_HOSTS = ['*','localhost','laal.dalang.com.au'] 
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 WAGTAILADMIN_BASE_URL="http://localhost:8000"

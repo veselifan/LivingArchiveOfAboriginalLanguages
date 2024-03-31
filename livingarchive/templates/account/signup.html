@@ -46,7 +46,7 @@
                 <p style="color: black;">{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>                
                 
                 <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
-                    <div style="color: black; text-align: right; margin-top: 50px; margin-right: 40%;">
+                    <div style="color: black; text-align: right; margin-top: 100; margin-right: 40%;">
                         {% csrf_token %}
                         {{ form.as_p }}
                         {% if redirect_field_value %}
@@ -63,7 +63,7 @@
             
         </div>
         <!-- Footer-->
-        <footer class="footer py-4" style="margin-top: 131px;">
+        <footer class="footer py-4" style="margin-top: 351px;">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-lg-4 text-lg-start">Copyright &copy; Your Website 2022</div>
