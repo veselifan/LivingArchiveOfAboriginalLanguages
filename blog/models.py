@@ -4,14 +4,19 @@ from datetime import datetime
 
 import requests
 from django.contrib.auth.models import User
+from django import forms
 from django.db import models
 from django.template.response import TemplateResponse
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
+from django.utils.functional import cached_property
 from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
+from wagtail.blocks import TextBlock
+from wagtail.blocks.struct_block import StructBlockAdapter
 from wagtail.core.blocks import StructBlock, CharBlock
 from wagtail.core.fields import RichTextField
 from wagtail.core.fields import StreamField
+from wagtail.search import index
 
 # from mirage import fields
 from wagtail.core.models import Page
@@ -19,6 +24,8 @@ from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.models import PAGE_TEMPLATE_VAR
+from wagtail.snippets.blocks import SnippetChooserBlock
+from wagtail.telepath import register
 from wagtail_pdf_view.mixins import PdfViewPageMixin
 from wagtailgmaps.edit_handlers import MapFieldPanel
 from wagtailvideos.edit_handlers import VideoChooserPanel
@@ -50,12 +57,28 @@ class BlogListingPage(Page):
         return context
 
 
+class LinkTitleBlockAdapter(StructBlockAdapter):
+
+    js_constructor = 'blog.models.LinkTitleBlock'
+
+    @cached_property
+    def media(self):
+        media = super().media
+        js_path = '/livingarchive/static/js/BlogEditDetails.js'
+        return forms.Media(
+            js=media._js + [js_path],
+        )
+
+
 class LinkBlock(StructBlock):
     title = CharBlock(required=True, help_text="Enter the link title")
     url = CharBlock(required=True, help_text="Enter the link URL")
     document = DocumentChooserBlock(
         required=False, help_text="Choose a document for this link"
     )
+
+
+register(LinkTitleBlockAdapter(), LinkBlock)
 
 
 class BlogDetailPage(Page, PdfViewPageMixin):
