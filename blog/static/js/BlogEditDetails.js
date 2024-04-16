@@ -8,34 +8,28 @@ class LinkTitleBlockDefinition extends window.wagtailStreamField.blocks
             initialError,
         );
 
-        let allOptions = [];
-        const titleField = document.getElementById(prefix + '-title');
-        const urlField = document.getElementById(prefix + '-url');
+        const body = document.getElementById('wagtail')
+        const inputTitleField = document.getElementById(prefix + '-title');
+        inputTitleField.setAttribute('type', 'search')
+        const dataList = document.createElement('datalist');
+        dataList.id = 'title-list'
+
         $.ajax({
             url: '/get_links_options/',
             type: 'GET',
-            success: function(data) {
-                allOptions = data.map(function(item) {
-                    return {
-                        title: item.title,
-                        url: item.url
-                    }
-                })
+            success: function (data) {
+                for (let i = 0; i < data.length; i++) {
+                    const option = document.createElement('option');
+                    option.value = data[i];
+                    dataList.appendChild(option);
+                }
+                body.appendChild(dataList);
             }
         });
 
-        const fieldChanggeHandler = () => {
-            let title = titleField.value.trim();
-            for (let option of allOptions) {
-                if (option.title.toLowerCase() === title.toLowerCase()) {
-                    urlField.value = option.url;
-                    break;
-                }
-            }
-        }
-        titleField.addEventListener('input', fieldChanggeHandler);
-
+        inputTitleField.setAttribute('list', 'title-list')
         return block;
     }
 }
+
 window.telepath.register('blog.models.LinkTitleBlock', LinkTitleBlockDefinition);
