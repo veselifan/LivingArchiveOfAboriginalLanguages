@@ -25,6 +25,8 @@ api_key=str(os.getenv("API_KEY"))
 
 WAGTAIL_ADDRESS_MAP_CENTER = 'Australia'  # It must be a properly formatted address
 WAGTAIL_ADDRESS_MAP_KEY = str(api_key)
+GOOGLE_MAPS_V3_APIKEY = str(api_key)
+GEO_WIDGET_DEFAULT_LOCATION = {'lat': -23.91276975, 'lng': 134.260923}
 
 #WAGTAIL_VIDEOS_DISABLE_TRANSCODE = True
 
@@ -73,7 +75,8 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'livingarchive',
     'wagtailmedia',
-    'wagtail_pdf_view'
+    'wagtail_pdf_view',
+    'wagtailgeowidget'
 ]
 
 SITE_ID = 1
@@ -180,6 +183,7 @@ STATICFILES_FINDERS = [
 
 STATICFILES_DIRS = [
     os.path.join(PROJECT_DIR, 'static'),
+    os.path.join(PROJECT_DIR, '../blog/static'),
 ]
 FILE_UPLOAD_TEMP_DIR = str(os.path.join(PROJECT_DIR, 'tmp'))
 

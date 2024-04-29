@@ -6,7 +6,7 @@ if __name__ == "__main__":
 
    
     unicode = str
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "livingarchive.settings.dev")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "livingarchive.settings.production")
 
     from django.core.management import execute_from_command_line
 

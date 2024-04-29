@@ -11404,26 +11404,26 @@ p {
 }
 
 header.masthead {
- background-color: #112941;
+  /*background-color: #112941;*/
    /*padding-top: 15rem;*/
    /*padding-bottom: 4rem;*/
   margin-top: 100px;
   margin-left: 5%;
-  margin-right: 5%;
+  /*margin-right: 5%;*/
   text-align: center;
    color: #000;
    display:block;
   background-image: url("../assets/img/banner1.jpg");
   width: 90%;
-  height: 200px;
+  height: 130px;
   background-repeat: no-repeat;
   background-attachment: scroll;
   background-position: center center;
- -webkit-background-size: cover;
+  -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
-background-size: cover;
-
+  background-size: contain;
+  zoom: 1;
 }
 header.masthead .masthead-subheading {
   font-size: 1.875rem;

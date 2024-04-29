@@ -6,6 +6,7 @@ from wagtail import urls as wagtail_urls
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
+from blog.views import get_links_options
 from search import views as search_views
 from user_group_management.views import GroupProfileListView, GroupMembersView, RemoveMemberView
 
@@ -17,6 +18,7 @@ urlpatterns = [
     path('group/<int:group_id>/remove_member/<int:user_id>/', RemoveMemberView.as_view(), name='remove_member'),
     path('documents/', include(wagtaildocs_urls)),
     path('search/', search_views.search, name='search'),
+    path("get_links_options/", get_links_options, name="links_options"),
     path(r'', include('allauth.urls')),
     path(r'', include(wagtail_urls)),
 ]
