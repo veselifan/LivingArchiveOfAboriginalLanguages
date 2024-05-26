@@ -11,6 +11,7 @@ class LinkTitleBlockDefinition extends window.wagtailStreamField.blocks
         const body = document.getElementById('wagtail')
         const inputTitleField = document.getElementById(prefix + '-title');
         inputTitleField.setAttribute('type', 'search')
+        inputTitleField.setAttribute('autocomplete', 'off')
         const dataList = document.createElement('datalist');
         dataList.id = 'title-list'
 
@@ -24,10 +25,10 @@ class LinkTitleBlockDefinition extends window.wagtailStreamField.blocks
                     dataList.appendChild(option);
                 }
                 body.appendChild(dataList);
+                inputTitleField.setAttribute('list', 'title-list')
             }
         });
 
-        inputTitleField.setAttribute('list', 'title-list')
         return block;
     }
 }

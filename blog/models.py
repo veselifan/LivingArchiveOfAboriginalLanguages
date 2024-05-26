@@ -1,7 +1,11 @@
+import hashlib
 import os
 import re
+import traceback
 from datetime import datetime
+from tempfile import NamedTemporaryFile
 
+import fitz
 import requests
 from django.contrib.auth.models import User
 from django import forms
@@ -17,6 +21,7 @@ from wagtail.core.blocks import StructBlock, CharBlock, ChoiceBlock
 from wagtail.core.fields import RichTextField
 from wagtail.core.fields import StreamField
 from wagtail.search import index
+from PIL import Image
 
 # from mirage import fields
 from wagtail.core.models import Page
@@ -32,10 +37,14 @@ from wagtailvideos.edit_handlers import VideoChooserPanel
 from wagtailmedia.edit_handlers import MediaChooserPanel
 from wagtailgeowidget.panels import GoogleMapsPanel
 from wagtailgeowidget.helpers import geosgeometry_str_to_struct
+from wagtail.images.models import Image as WagtailImage
+from wagtail.images.models import Filter
 
 from dotenv import load_dotenv
+
 load_dotenv()
-api_key=str(os.getenv("API_KEY"))
+api_key = str(os.getenv("API_KEY"))
+
 
 class BlogListingPage(Page):
     """Listing page list all the blog detail pages"""
@@ -58,7 +67,6 @@ class BlogListingPage(Page):
 
 
 class LinkTitleBlockAdapter(StructBlockAdapter):
-
     js_constructor = 'blog.models.LinkTitleBlock'
 
     @cached_property
@@ -71,7 +79,6 @@ class LinkTitleBlockAdapter(StructBlockAdapter):
 
 
 class LinkBlock(StructBlock):
-
     title = CharBlock(required=True)
 
 
@@ -91,7 +98,7 @@ class BlogDetailPage(Page, PdfViewPageMixin):
 
     template = "blog/blog_detail_page.html"
     date = models.PositiveIntegerField("Post date", choices=[
-        (year, year) for year in range(1970, datetime.now().year+1)
+        (year, year) for year in range(1970, datetime.now().year + 1)
     ], default=1970, null=True, blank=True)
     intro = models.CharField(max_length=250, null=True, blank=True)
     body = RichTextField(null=True, blank=True)
@@ -201,7 +208,12 @@ class BlogDetailPage(Page, PdfViewPageMixin):
 
     @cached_property
     def point(self):
-        return geosgeometry_str_to_struct(self.location)
+        if self.location:
+            return geosgeometry_str_to_struct(self.location)
+        return {
+            'x': -23.91276975,
+            'y': 134.260923,
+        }
 
     @property
     def lat(self):
@@ -225,9 +237,74 @@ def address2latlng(address):
     return ''
 
 
+def get_image_info(path):
+    """
+    get_image_info
+    """
+    image = Image.open(path)
+    image_resized = image.resize((500, 500), Image.ANTIALIAS)
+    image.close()
+    image_resized.save(path)
+    file_size = os.path.getsize(path)
+    image_resized.close()
+    with open(path, 'rb') as f:
+        md5 = hashlib.md5(f.read()).hexdigest()
+    return {
+        'width': 500,
+        'height': 500,
+        'file_size': file_size,
+        'file_md5': md5,
+    }
+
+
 @receiver(pre_save, sender=BlogDetailPage)
 def blog_details_pre_save(sender, instance, **kwargs):
     point = instance.point
-    instance.address = ','.join([str(point['y']), str(point['x'])])
+    x = format(float(point['x']), '.4f')
+    y = format(float(point['y']), '.4f')
+    instance.address = ','.join([str(y), str(x)])
     instance.address_backup = instance.address
 
+    if instance.pdf:
+        pdf_file_path = instance.pdf.file.path
+        pdf_title = instance.pdf.title
+        if os.path.exists(pdf_file_path):
+            with open(pdf_file_path, 'rb') as f:
+                pdf_hash = hashlib.md5(f.read()).hexdigest()
+            image_dir = os.path.join(
+                'media',
+                'original_images'
+            )
+            avatar_file_name = '{}.png'.format(pdf_hash)
+            avatar_file_path = os.path.join(image_dir, avatar_file_name)
+            if not os.path.exists(avatar_file_path):
+                with fitz.open(pdf_file_path) as doc:
+                    first_page = doc[0]
+                    try:
+                        pix = first_page.get_pixmap()
+                        pix.save(avatar_file_path)
+                    except:
+                        pass
+            image_info = get_image_info(avatar_file_path)
+            if instance.image:
+                instance.image.title = pdf_title
+                instance.image.file_size = image_info['file_size']
+                instance.image.width = image_info['width']
+                instance.image.height = image_info['height']
+                instance.image.file_hash = image_info['file_md5']
+                instance.image.file = os.path.join('original_images', avatar_file_name)
+                rendition_model = instance.image.get_rendition_model()
+                rendition_model.objects.filter(image_id=instance.image.id).delete()
+                for sepc in ['original']:
+                    instance.image.get_rendition(Filter(spec=sepc))
+            else:
+                image = WagtailImage(
+                    title=pdf_title,
+                    file_size=image_info['file_size'],
+                    width=image_info['width'],
+                    height=image_info['height'],
+                    file_hash=image_info['file_md5'],
+                    file=os.path.join('original_images', avatar_file_name)
+                )
+                image.save()
+                instance.image = image
