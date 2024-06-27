@@ -159,9 +159,11 @@
             string = "{% for post in posts %}{{ post.title }}@*&!{% endfor %}";
             var title = string.split("@*&!");
 
+            string = "{% for post in posts %}{{ post.id }}@*&!{% endfor %}";
+            var ids = string.split("@*&!");
+
             string = "{% for post in posts %}{{ post.address }}@*&!{% endfor %}";
             var address = string.split("@*&!");
-            console.info(address)
 
             string = "{% for post in posts %}{{ post.intro }}@*&!{% endfor %}";
             var intro = string.split("@*&!");
@@ -183,7 +185,7 @@
                 const uid = uids[i]
                 if (uid === '') continue
                 if (typeof (blogSet[uid]) === 'undefined') blogSet[uid] = []
-                blogSet[uid].push([title[i], address[i], i, intro[i], body[i], url[i], imgs[i], uid])
+                blogSet[uid].push([title[i], address[i], i, intro[i], body[i], url[i], imgs[i], uid, ids[i]])
             }
 
             var map = L.map(
@@ -213,6 +215,7 @@
             let markerSet = []
 
             var myMarkerClusterGroup = L.markerClusterGroup()
+            myMarkerClusterGroup._zoomOrSpiderfy = function (e) {}
 
             var colorSet = ['#F79327', '#DB005B', '#FF55BB', '#FFD3A3', '#FCFFB2', '#B6EAFA', '#B2A4FF', '#FF6969', '#B4FF9F']
 
@@ -227,28 +230,33 @@
                         if (l === "") {
                             continue
                         }
+                        const postId = locations[i][8]
                         try {
                             // marker
                             const marker = L.marker([parseFloat(l[0]), parseFloat(l[1])]);
+                            marker.on('click', function () {
+                                // 页内导航
+                                window.location.href = "#post-" + postId;
+                            })
 
                             // line point
                             pointList.push(new L.LatLng(parseFloat(l[0]), parseFloat(l[1])))
 
-                            let popup = L.popup().setLatLng([parseFloat(l[0]), parseFloat(l[1])]).setContent(
-                                '<div id="content">' +
-                                '<div id="siteNotice">' +
-                                "</div>" +
-                                '<h2 style="font-size:150%;" id="firstHeading" class="firstHeading">' + locations[i][0] + '</h1>' +
-                                '<div id="bodyContent">' +
-                                '<p style="font-size:130%;">' + locations[i][3] + '</p>' +
-                                '<a href="' + locations[i][5] + '">' +
-                                (locations[i][6] ? "<img src='" + locations[i][6] + "' width='200' height='150'> </a>" : '') +
-                                '<p>Link: <a href="' + locations[i][5] + '">' + locations[i][0] +
-                                "</p>" +
-                                "</div>" +
-                                "</div>")
-
-                            marker.bindPopup(popup, {minWidth: 650}).openPopup();
+                            {#let popup = L.popup().setLatLng([parseFloat(l[0]), parseFloat(l[1])]).setContent(#}
+                            {#    '<div id="content">' +#}
+                            {#    '<div id="siteNotice">' +#}
+                            {#    "</div>" +#}
+                            {#    '<h2 style="font-size:150%;" id="firstHeading" class="firstHeading">' + locations[i][0] + '</h1>' +#}
+                            {#    '<div id="bodyContent">' +#}
+                            {#    '<p style="font-size:130%;">' + locations[i][3] + '</p>' +#}
+                            {#    '<a href="' + locations[i][5] + '">' +#}
+                            {#    (locations[i][6] ? "<img src='" + locations[i][6] + "' width='200' height='150'> </a>" : '') +#}
+                            {#    '<p>Link: <a href="' + locations[i][5] + '">' + locations[i][0] +#}
+                            {#    "</p>" +#}
+                            {#    "</div>" +#}
+                            {#    "</div>")#}
+                            {##}
+                            {#marker.bindPopup(popup, {minWidth: 650}).openPopup();#}
 
                             markerSet.push(marker);
                             myMarkerClusterGroup.addLayer(marker)
@@ -258,6 +266,10 @@
                     }
                 }
             }
+            myMarkerClusterGroup.on('clusterclick', function (event) {
+                {#event.originalEvent.stopPropagation();#}
+                window.location.href = "#post-" + ids[0];
+            })
             map.addLayer(myMarkerClusterGroup)
         </script>
         </body>
@@ -274,7 +286,7 @@
         </div>
         <div class="row">
             {% for post in posts|slice:":6" %}
-            <div class="col-lg-4 col-sm-6 mb-4">
+            <div id="post-{{ post.id }}" class="col-lg-4 col-sm-6 mb-4">
                 <div class="portfolio-item pf-inner-box">
                     <div class="portfolio-caption title" style="text-align: center">
                         <div class="portfolio-caption-heading"><a href="{{ post.url }}"><b>{{ post.title }}</b></a>
